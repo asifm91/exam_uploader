@@ -1,7 +1,7 @@
-from nicegui import ui, app, Client
 import datetime
-import os
 from pathlib import Path
+
+from nicegui import Client, app, ui
 
 if "course_code" not in app.storage.general:
     app.storage.general["course_code"] = "CSE213"
@@ -39,7 +39,9 @@ def admin_page():
 
     # admin panel
     ## log out and password change
-    with ui.column():
+    with ui.row().classes("w-full"):
+        ui.label("Admin Panel").classes("text-2xl font-bold")
+        ui.space()
         ui.button(
             "Logout",
             icon="logout",
@@ -66,7 +68,7 @@ def admin_page():
 
     ui.separator()
 
-    with ui.grid(columns="auto 1fr").classes("gap-4"):
+    with ui.grid(columns="auto 1fr").classes("gap-10"):
         dialog = ui.dialog()
 
         async def show_delete_all_confirmation():
@@ -77,9 +79,9 @@ def admin_page():
                     ui.button("Yes", on_click=lambda: dialog.submit(True)).props(
                         "color=negative"
                     )
-                    ui.button(
-                        "Cancel", on_click=lambda: dialog.submit(False)
-                    ).props("outline")
+                    ui.button("Cancel", on_click=lambda: dialog.submit(False)).props(
+                        "outline"
+                    )
 
             confirmed = await dialog
             if confirmed:
@@ -97,9 +99,9 @@ def admin_page():
                     ui.button("Yes", on_click=lambda: dialog.submit(True)).props(
                         "color=negative"
                     )
-                    ui.button(
-                        "Cancel", on_click=lambda: dialog.submit(False)
-                    ).props("outline")
+                    ui.button("Cancel", on_click=lambda: dialog.submit(False)).props(
+                        "outline"
+                    )
 
             confirmed = await dialog
             if confirmed:
@@ -176,7 +178,7 @@ def admin_page():
             @ui.refreshable
             def generate_submissions_table():
                 submissions = app.storage.general.get("submissions", [])
-                ui.label(f"Total Submissions: {len(submissions)}")
+                # ui.label(f"Total Submissions: {len(submissions)}")
                 ui.table(
                     columns=[
                         {
@@ -210,7 +212,9 @@ def admin_page():
                     row_key="s_filename",
                     column_defaults={"align": "center"},
                     on_select=lambda e: (
-                        app.storage.client.update({"selected_submissions": e.selection}),
+                        app.storage.client.update(
+                            {"selected_submissions": e.selection}
+                        ),
                         display_submission_details.refresh(),
                     ),
                 ).props("").set_selection("single")
@@ -236,8 +240,13 @@ def admin_page():
                         app.storage.general, "submissions"
                     )
 
-            with ui.row():
+            with ui.row().classes("w-full"):
                 ui.label("Submissions").classes("text-xl font-bold")
+                ui.badge().bind_text_from(
+                    app.storage.general, "submissions", lambda x: str(len(x))
+                ).props("color=secondary").classes("text-white")
+                # ui.chip().bind_text_from(app.storage.general, "submissions", lambda x: f"{len(x)}").classes("text-white").props("color=secondary")
+                ui.space()
                 ui.button(
                     icon="refresh", on_click=generate_submissions_table.refresh
                 ).props("dense rounded")
@@ -246,11 +255,11 @@ def admin_page():
 
             ui.separator()
 
-            
-
             @ui.refreshable
             def display_submission_details():
-                selected_submissions = app.storage.client.get("selected_submissions", [])
+                selected_submissions = app.storage.client.get(
+                    "selected_submissions", []
+                )
                 submission_info = (
                     selected_submissions[0] if selected_submissions else {}
                 )

@@ -16,7 +16,7 @@ To address these issues, I had the idea of creating a local web server in one of
 - Students could manipulate others submissions
 - Students could submit multiple times
 
-Therefore a more complex setup is needed. 
+Therefore a more complex setup is needed.
 
 ## Usage
 
@@ -29,15 +29,25 @@ You will also need [Pipenv](https://pipenv.pypa.io/en/latest/) to install depend
 1. Clone/cownload the repository.
 2. Go to the project folder in a terminal/command prompt
 3. Install dependencies
-```sh
-pipenv install
-```
-4. Start the webserver (use `python3` in Linux)
-```sh
-python app.py
-```
+
+    ```sh
+    pipenv install
+    ```
+
+4. Activate virtual environment
+
+    ```sh
+    pipenv shell
+    ```
+
+5. Start the webserver (use `python3` in Linux)
+
+    ```sh
+    python app.py
+    ```
 
 ### Features
+
 1. Predefined student list
 2. Automatic renaming
 3. Only one submission per IP
@@ -45,7 +55,9 @@ python app.py
 5. Export to CSV
 
 ### Pages
+
 There are three pages
+
 1. `/_admin`: admin stuff
 2. `/`: submission form
 3. `/submitted`: submission confirmation

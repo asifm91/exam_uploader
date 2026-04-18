@@ -1,0 +1,36 @@
+List of exams on the left sidebar
+- color code for completed, running and upcoming exams
+
+class Exam
+- title: str
+- course: Course
+- submissions: list[Submission]
+
+class Course
+- course_code: str
+- section: str
+- semester: str
+- year: int
+- student_list: list[Student]
+
+class Student
+- id: str
+- name: str
+- submissions: list[submissions]
+
+class Submission
+- exam: Exam
+- student: Student
+- data: list[Field]
+
+class Field
+- name: str
+- value: str (text input, or file_path for file input)
+- type: str (text, file for now. more to come. maybe enum is better?)
+
+Folder name format:
+    <Year>-<Semster>-<Course Code>-<Section>--<Title>
+Example:
+    2025-Summer-CSE213-1--Quiz 1
+
+

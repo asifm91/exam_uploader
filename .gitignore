@@ -3,3 +3,9 @@
 
 # submissions
 submissions/
+
+# resources
+resources/
+
+# python cache
+__pycache__/

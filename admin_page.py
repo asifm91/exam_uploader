@@ -7,7 +7,7 @@ import zipfile
 from datetime import datetime
 from pathlib import Path
 
-from nicegui import app, ui
+from nicegui import app, run, ui
 
 from models import Course, Exam, Field, FieldType, Student, Submission
 
@@ -952,8 +952,8 @@ def exam_management_page(exam_id: str):
 
                 with ui.row().classes("gap-2"):
 
-                    def download_csv():
-                        csv_path = create_submissions_csv(exam)
+                    async def download_csv():
+                        csv_path = await run.io_bound(create_submissions_csv, exam)
                         if csv_path:
                             ui.download(csv_path)
                             ui.notify(
@@ -963,8 +963,8 @@ def exam_management_page(exam_id: str):
                         else:
                             ui.notify("No submissions to download", type="warning")
 
-                    def download_zip():
-                        zip_path = create_submissions_zip(exam)
+                    async def download_zip():
+                        zip_path = await run.io_bound(create_submissions_zip, exam)
                         if zip_path:
                             ui.download(zip_path)
                             ui.notify(
@@ -1006,9 +1006,11 @@ def exam_management_page(exam_id: str):
                         with ui.row().classes("gap-2 justify-end mt-6"):
                             ui.button("Cancel", on_click=dialog.close).props("outline")
 
-                            def confirm_reset():
-                                delete_all_submissions(
-                                    exam, delete_files=delete_files_checkbox.value
+                            async def confirm_reset():
+                                await run.io_bound(
+                                    delete_all_submissions,
+                                    exam,
+                                    delete_files_checkbox.value,
                                 )
                                 ui.notify(
                                     "All submissions deleted successfully",
@@ -1077,11 +1079,12 @@ def exam_management_page(exam_id: str):
                                                     "Cancel", on_click=dialog.close
                                                 ).props("outline")
 
-                                                def confirm_delete():
-                                                    delete_submission(
+                                                async def confirm_delete():
+                                                    await run.io_bound(
+                                                        delete_submission,
                                                         exam,
                                                         sub,
-                                                        delete_files=delete_files_checkbox.value,
+                                                        delete_files_checkbox.value,
                                                     )
                                                     ui.notify(
                                                         f"Submission from {sub.student.name} deleted",

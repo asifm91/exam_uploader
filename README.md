@@ -43,8 +43,23 @@ You will also need [Pipenv](https://pipenv.pypa.io/en/latest/) to install depend
 5. Start the webserver (use `python3` in Linux)
 
     ```sh
-    python app.py
+    python main.py
     ```
+
+    This starts the app in **lab mode**: hot-reload is disabled and the
+    reconnect window is widened, so a code editor autosaving in the
+    background or a brief wifi hiccup won't drop every connected student.
+    Use this mode whenever the app is actually serving students.
+
+    For local development, pass `--dev` to get hot-reload and an
+    auto-opened browser tab:
+
+    ```sh
+    python main.py --dev
+    ```
+
+    `--host` and `--port` are also available if the lab needs a specific
+    port opened in the firewall (defaults: `0.0.0.0:8080`).
 
 ### Features
 
@@ -56,8 +71,6 @@ You will also need [Pipenv](https://pipenv.pypa.io/en/latest/) to install depend
 
 ### Pages
 
-There are three pages
-
-1. `/_admin`: admin stuff
-2. `/`: submission form
-3. `/submitted`: submission confirmation
+1. `/`: list of exams open/closed for submission, with the student submission stepper for each open exam
+2. `/admin`: login-gated admin panel for managing courses, students, and exams
+3. `/admin/exams/{exam_id}`: manage a specific exam (accept/stop submissions, view student status, download CSV/ZIP, delete individual/all submissions)

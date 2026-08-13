@@ -2,6 +2,7 @@
 Student submission pages for exams.
 """
 
+import uuid
 from pathlib import Path
 
 from nicegui import ui
@@ -26,9 +27,11 @@ async def save_uploaded_file(
 
     # Get original filename from upload result
     original_filename = uploaded_file.name
+    file_ext = Path(original_filename).suffix
+    short_id = f"{uuid.uuid4().hex[:6]}"
 
-    # Generate new filename: <year>-<semester>-<course_code>-<section>--<exam_name>--<student_id>-<field_name>--<original_file_name>
-    new_filename = f"{exam.course.year}-{exam.course.semester}-{exam.course.course_code}-{exam.course.section}--{exam.title}--{student.id}-{field_name}--{original_filename}"
+    # Generate new filename: <year>-<semester>-<course_code>-<section>--<exam_name>--<student_id>-<field_name>--<hash><ext>
+    new_filename = f"{exam.course.year}-{exam.course.semester}-{exam.course.course_code}-{exam.course.section}--{exam.title}--{student.id}-{field_name}--{short_id}{file_ext}"
 
     file_path = submissions_dir / new_filename
 

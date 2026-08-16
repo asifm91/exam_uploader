@@ -99,8 +99,8 @@ def render_exam_list_item(exam: Exam, disabled: bool = False):
             ui.button("Closed").props("disabled").classes("w-full mt-4")
         else:
             ui.button(
-                "Submit",
-                icon="upload",
+                "Open Submission Form",
+                icon="dynamic_form",
                 on_click=lambda eid=exam.id: ui.navigate.to(f"/{eid}"),
             ).classes("w-full mt-4")
 

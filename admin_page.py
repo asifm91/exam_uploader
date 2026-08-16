@@ -437,7 +437,7 @@ def render_courses_panel():
             with ui.grid(columns="repeat(auto-fill, minmax(350px, 1fr))").classes(
                 "w-full gap-4"
             ):
-                for course in courses:
+                for course in reversed(courses):
                     course.render_ui(on_edit=show_edit_course_form)
         else:
             ui.label("No courses found. Click 'Add Course' to create one.").classes(
@@ -621,7 +621,7 @@ def render_exams_panel():
             with ui.grid(columns="repeat(auto-fill, minmax(350px, 1fr))").classes(
                 "w-full gap-4"
             ):
-                for exam in exams:
+                for exam in reversed(exams):
                     exam.render_ui()
         else:
             ui.label("No exams found. Click 'Add Exam' to create one.").classes(
@@ -642,7 +642,7 @@ async def show_add_exam_form():
         )
 
         # Course dropdown
-        course_options = {course: str(course) for course in courses}
+        course_options = {course: str(course) for course in reversed(courses)}
         if not course_options:
             ui.label("No courses available. Please create a course first.").classes(
                 "text-orange-600"

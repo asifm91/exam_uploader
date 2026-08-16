@@ -326,6 +326,27 @@ def submission_page(exam_id: str):
 
                     selected_student = student_select.value
 
+                    # Re-check for an existing submission (the earlier check in
+                    # check_submission() can be stale by the time the form is
+                    # actually submitted, e.g. after a long upload)
+                    existing_submission = next(
+                        (
+                            s
+                            for s in exam.submissions
+                            if s.student.id == selected_student.id
+                        ),
+                        None,
+                    )
+                    if existing_submission:
+                        status_message.set_text(
+                            f"⚠️ You already submitted on "
+                            f"{existing_submission.submission_date.strftime('%Y-%m-%d %H:%M')}"
+                        )
+                        status_message.classes(
+                            add="text-red-600", remove="text-green-600"
+                        )
+                        return
+
                     # Validate submission fields
                     if template_submission and template_submission.data:
                         for field in template_submission.data:

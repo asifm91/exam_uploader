@@ -187,24 +187,36 @@ def _update_id_counters():
     app.storage.general["submission_id_counter"] = max_submission_id
 
 
+_data_loaded = False
+
+
 def load_all_data():
-    """Load all courses and exams from storage."""
+    """Load all courses and exams from storage.
+
+    Idempotent: only reads from storage the first time it's called. Courses/exams
+    are reassigned to brand-new objects on every load, which would orphan any
+    Exam/Submission object already referenced by an in-progress student session
+    (e.g. mid-way through the submission stepper) if this ran more than once -
+    silently dropping their submission on save. Safe to call unconditionally.
+    """
+    global _data_loaded
+    if _data_loaded:
+        return
     load_courses()
     load_exams()
     _update_id_counters()
+    _data_loaded = True
 
 
 def get_exams():
     """Get the list of exams."""
-    if not exams:
-        load_all_data()
+    load_all_data()
     return exams
 
 
 def get_exam(id: str) -> Exam | None:
     """Get a specific exam by ID."""
-    if not exams:
-        load_all_data()
+    load_all_data()
     return next((e for e in exams if e.id == id), None)
 
 
@@ -369,7 +381,6 @@ def create_admin_panel():
         render_login_page()
         return
 
-    # Load data from storage on first load
     load_all_data()
 
     with ui.column().classes("w-full gap-4 p-4"):
@@ -828,9 +839,7 @@ def exam_management_page(exam_id: str):
         )
         return
 
-    # Load data if not already loaded
-    if not courses or not exams:
-        load_all_data()
+    load_all_data()
 
     # Find the exam
     exam = next((e for e in exams if e.id == exam_id), None)

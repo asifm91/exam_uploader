@@ -290,6 +290,17 @@ def delete_all_submissions(exam: Exam, delete_files: bool = False) -> None:
             except Exception as e:
                 print(f"Error deleting directory {exam_dir}: {e}")
 
+        # Delete any previously generated CSV/ZIP exports for this exam - they're
+        # snapshots of the submissions we're about to clear, so they'd go stale
+        downloads_dir = Path("downloads")
+        if downloads_dir.exists():
+            for export_file in downloads_dir.glob(f"{dir_name}--*"):
+                try:
+                    export_file.unlink()
+                    print(f"Deleted export: {export_file}")
+                except Exception as e:
+                    print(f"Error deleting export {export_file}: {e}")
+
     # Filter out template submission (student id/name empty) but keep it
     template_submission = next((s for s in exam.submissions if not s.student.id), None)
     exam.submissions.clear()

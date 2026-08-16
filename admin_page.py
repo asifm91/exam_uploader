@@ -232,6 +232,21 @@ async def save_exam_resource_file(exam: Exam, uploaded_file) -> dict:
     return {"name": uploaded_file.name, "path": str(file_path)}
 
 
+def format_file_size(num_bytes: int) -> str:
+    """Format a byte count as a human-readable string, e.g. '4.2 MB'."""
+    size = float(num_bytes)
+    if size < 1024:
+        return f"{size:.0f} B"
+    size /= 1024
+    if size < 1024:
+        return f"{size:.1f} KB"
+    size /= 1024
+    if size < 1024:
+        return f"{size:.1f} MB"
+    size /= 1024
+    return f"{size:.1f} GB"
+
+
 def delete_submission_files(submission: Submission) -> None:
     """Delete all uploaded files in a submission."""
     for field in submission.data:
@@ -1161,6 +1176,24 @@ def exam_management_page(exam_id: str):
                                                         ui.label(
                                                             f"{icon} {field.value}"
                                                         ).classes("text-sm")
+
+                                                    file_path_str = (
+                                                        field.saved_filepath
+                                                        or field.value
+                                                    )
+                                                    file_path = (
+                                                        Path(file_path_str)
+                                                        if file_path_str
+                                                        else None
+                                                    )
+                                                    if file_path and file_path.exists():
+                                                        ui.label(
+                                                            format_file_size(
+                                                                file_path.stat().st_size
+                                                            )
+                                                        ).classes(
+                                                            "text-xs text-gray-500"
+                                                        )
 
                                                 # Add play button for videos
                                                 if (

@@ -1208,6 +1208,23 @@ def exam_management_page(exam_id: str):
                                                             "text-xs text-gray-500"
                                                         )
 
+                                                # Download button for the file
+                                                if file_path and file_path.exists():
+
+                                                    def download_this_file(
+                                                        path=str(file_path),
+                                                        name=file_path.name,
+                                                    ) -> None:
+                                                        ui.download(path, name)
+
+                                                    ui.button(
+                                                        icon="download",
+                                                        on_click=download_this_file,
+                                                        color="primary",
+                                                    ).props("flat no-caps").classes(
+                                                        "ml-2"
+                                                    )
+
                                                 # Add play button for videos
                                                 if (
                                                     field.type == FieldType.VIDEO

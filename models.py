@@ -256,8 +256,10 @@ class Exam:
                 ui.label(self.title).classes("text-xl font-bold")
                 ui.label(f"ID: {self.id}").classes("text-xs text-gray-500")
 
-            ui.label(f"{self.course}").classes("text-sm text-gray-600")
-            ui.label(f"Submissions: {len(self.submissions)}").classes(
+            with ui.row():
+                ui.label(f"{self.course}").classes("text-sm text-gray-600")
+                ui.label(f"ID: {self.course.id}").classes("text-xs text-gray-500")
+            ui.label(f"Submissions: {len(self.submissions) - 1}").classes(
                 "text-sm text-gray-600 mt-2"
             )
 

@@ -887,13 +887,15 @@ def exam_management_page(exam_id: str):
         with ui.card().classes("w-full"):
             ui.label("Exam Information").classes("text-lg font-bold mb-2")
             ui.label(f"ID: {exam.id}").classes("text-sm text-gray-600")
-            ui.label(
-                f"Course: {exam.course.course_code} - Section {exam.course.section}"
-            ).classes("text-sm text-gray-600")
+            with ui.row():
+                ui.label(
+                    f"Course: {exam.course.course_code} - Section {exam.course.section}"
+                ).classes("text-sm text-gray-600")
+                ui.label(f"ID: {exam.course.id}").classes("text-xs text-gray-500")
             ui.label(f"Status: {exam.get_status().value}").classes(
                 "text-sm text-gray-600"
             )
-            ui.label(f"Submissions: {len(exam.submissions)}").classes(
+            ui.label(f"Submissions: {len(exam.submissions)-1}").classes(
                 "text-sm text-gray-600"
             )
 

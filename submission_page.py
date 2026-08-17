@@ -153,9 +153,9 @@ def submission_page(exam_id: str):
                             ui.button(
                                 "Download",
                                 icon="download",
-                                on_click=lambda path=resource["path"]: ui.download(
-                                    path
-                                ),
+                                on_click=lambda path=resource["path"], name=resource[
+                                    "name"
+                                ]: ui.download(path, name),
                                 color="primary",
                             ).props("flat no-caps").classes("text-sm")
 

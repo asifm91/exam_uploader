@@ -990,35 +990,49 @@ def exam_management_page(exam_id: str):
                 with ui.row().classes("gap-2"):
 
                     async def download_csv():
-                        csv_path = await run.io_bound(create_submissions_csv, exam)
-                        if csv_path:
-                            ui.download(csv_path)
-                            ui.notify(
-                                f"CSV downloaded: {Path(csv_path).name}",
-                                type="positive",
+                        csv_button.props("loading")
+                        try:
+                            csv_path = await run.io_bound(
+                                create_submissions_csv, exam
                             )
-                        else:
-                            ui.notify("No submissions to download", type="warning")
+                            if csv_path:
+                                ui.download(csv_path)
+                                ui.notify(
+                                    f"CSV downloaded: {Path(csv_path).name}",
+                                    type="positive",
+                                )
+                            else:
+                                ui.notify(
+                                    "No submissions to download", type="warning"
+                                )
+                        finally:
+                            csv_button.props(remove="loading")
 
                     async def download_zip():
-                        zip_path = await run.io_bound(create_submissions_zip, exam)
-                        if zip_path:
-                            ui.download(zip_path)
-                            ui.notify(
-                                f"ZIP downloaded: {Path(zip_path).name}",
-                                type="positive",
+                        zip_button.props("loading")
+                        try:
+                            zip_path = await run.io_bound(
+                                create_submissions_zip, exam
                             )
-                        else:
-                            ui.notify("No files to download", type="warning")
+                            if zip_path:
+                                ui.download(zip_path)
+                                ui.notify(
+                                    f"ZIP downloaded: {Path(zip_path).name}",
+                                    type="positive",
+                                )
+                            else:
+                                ui.notify("No files to download", type="warning")
+                        finally:
+                            zip_button.props(remove="loading")
 
-                    ui.button(
+                    csv_button = ui.button(
                         "Download CSV",
                         icon="download",
                         color="primary",
                         on_click=download_csv,
                     ).props("outline")
 
-                    ui.button(
+                    zip_button = ui.button(
                         "Download ZIP",
                         icon="download",
                         color="primary",
